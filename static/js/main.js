@@ -38,6 +38,7 @@ $(document).ready(function(){
     }
 
     function submitFrame(){
+        console.log('Adios')
         width=video.width;
         height=video.height;
         context.drawImage(video, 0, 0, width , height );
@@ -58,7 +59,7 @@ $(document).ready(function(){
 
 
     socket.on('response_back', function(image){
-            // console.log('You got me!')
+            console.log('You got me!')
             photo.setAttribute('src', image );
     });
 });
