@@ -1,5 +1,4 @@
 flask
-flask-socketio==5.2.0
 gast
 h5py
 jinja2
@@ -7,7 +6,6 @@ keras
 libclang
 numpy
 opencv-python
-pillow
 python-engineio==4.3.4
 python-socketio==5.7.2
 requests

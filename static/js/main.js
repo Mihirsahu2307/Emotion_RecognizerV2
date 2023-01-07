@@ -1,10 +1,4 @@
 $(document).ready(function(){
-    var socket = io()
-    // var socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
-    socket.on('connect', function(){
-        console.log("Connected...!", socket.connected)
-    });
-
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     const video = document.querySelector("#videoElement");
@@ -38,7 +32,6 @@ $(document).ready(function(){
     }
 
     function submitFrame(){
-        console.log('Adios')
         width=video.width;
         height=video.height;
         context.drawImage(video, 0, 0, width , height );
@@ -48,18 +41,41 @@ $(document).ready(function(){
             const formData = new FormData();
             formData.append('image', blob);
           
-            // Next, we can send the FormData object to the Python server using an HTTP POST request
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/webcam', true);
-            xhr.send(formData);
+            fetch("/webcam", {
+                method: 'POST',
+                body: formData,
+                //headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"}  // makes only problem
+            }).then(function(response) {
+                return response.blob();
+            }).then(function(blob) {
+                //console.log(blob);  // it slow down video from server
+                console.log('Heh, you got me!')
+                photo.src = URL.createObjectURL(blob);
+            }).catch(function(err) {
+                console.log('Fetch problem: ' + err.message);
+            });
+        
+            // $.ajax({
+            //     type: 'POST',
+            //     url: '/webcam',
+            //     data: formData,
+            //     contentType: false,
+            //     cache: false,
+            //     processData: false,
+            //     success: function(data) {
+            //         console.log('Great Success!');
+            //     },
+            // });
+
+            console.log('Adios')
         }, 'image/jpeg', 1.0);
 
         context.clearRect(0, 0, width,height );
     }
 
 
-    socket.on('response_back', function(image){
-            console.log('You got me!')
-            photo.setAttribute('src', image );
-    });
+    // socket.on('response_back', function(image){
+    //         console.log('You got me!')
+    //         photo.setAttribute('src', image );
+    // });
 });
